@@ -10,7 +10,12 @@
   "error": {
     "notFound": "Nije pronađeno",
     "fetchingData": "Greška prilikom dohvatanja podataka",
-    "general": "Došlo je do greške, pokušaj ponovo."
+    "general": "Došlo je do greške, pokušaj ponovo.",
+    "sessionExpired": "Sesija je istekla! Prijavi se ponovo.",
+    "forbidden": "Pristup zabranjen",
+    "unauthorized": "Neovlašćen pristup",
+    "tooManyRequests": "Previše zahteva. Pokušaj ponovo kasnije.",
+    "internalServerError": "Interna serverska greška. Pokušaj ponovo kasnije."
   },
   "login": {
     "success": "Prijava uspešna!",

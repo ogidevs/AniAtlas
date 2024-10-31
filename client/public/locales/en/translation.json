@@ -10,7 +10,12 @@
   "error": {
     "notFound": "Not Found",
     "fetchingData": "Error Fetching Data",
-    "general": "An error occurred, please try again."
+    "general": "An error occurred, please try again.",
+    "sessionExpired": "Session Expired! Please login again.",
+    "forbidden": "Access Forbidden",
+    "unauthorized": "Unauthorized Access",
+    "tooManyRequests": "Too Many Requests. Please try again later.",
+    "internalServerError": "Internal Server Error. Please try again later."
   },
   "profile": {
     "username": "Username",

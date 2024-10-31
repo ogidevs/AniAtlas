@@ -4,13 +4,14 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { FaExternalLinkAlt } from "react-icons/fa";
-import { useAuth } from '../AuthContext';
+import { useAuth } from "../AuthContext";
 
 const AnimeDialog = ({ isDialogOpen, animeInfo, closeDialog }) => {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, fetchWithAuth } = useAuth();
   const [characters, setCharacters] = useState([]);
   const [comments, setComments] = useState([]);
+  const [commentContent, setCommentContent] = useState("");
   const [hasNext, setHasNext] = useState(true);
 
   if (!isDialogOpen) return null;
@@ -31,18 +32,17 @@ const AnimeDialog = ({ isDialogOpen, animeInfo, closeDialog }) => {
   };
 
   const addComment = async () => {
-    const comment = document.querySelector("textarea").value;
     const body = {
-      content: comment,
+      content: commentContent,
       user_id: user.id,
       username: user.username,
-      anime_id: animeInfo.id
+      anime_id: animeInfo.id,
     };
-    fetch(`/comment`, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json', 
-        'Authorization': `Bearer ${localStorage.getItem('token')}` 
+    fetchWithAuth(`/comment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify(body),
     })
@@ -56,23 +56,26 @@ const AnimeDialog = ({ isDialogOpen, animeInfo, closeDialog }) => {
         if (data.data === null || data.data === undefined) {
           throw new Error(data.detail);
         }
-        setComments([...comments, ...(Array.isArray(data.data) ? data.data : (data.data ? [data.data] : []))]);
-        
-      document.querySelector("textarea").value = "";
-      toast.success(t("animeDialog.commentAdded"));
-      })
-      .catch((error) => {
-        toast.error(error.message);
-        console.error("Error fetching data:", error);
+        setComments([
+          ...comments,
+          ...(Array.isArray(data.data)
+            ? data.data
+            : data.data
+              ? [data.data]
+              : []),
+        ]);
+
+        setCommentContent("");
+        toast.success(t("animeDialog.commentAdded"));
       });
   };
 
   const deleteComment = async (commentId) => {
-    fetch(`/comment/${commentId}`, {
-      method: 'DELETE',
+    fetchWithAuth(`/comment/${commentId}`, {
+      method: "DELETE",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
       .then((response) => {
@@ -92,11 +95,11 @@ const AnimeDialog = ({ isDialogOpen, animeInfo, closeDialog }) => {
   };
 
   const fetchAnimeComments = async (skip) => {
-    fetch(`/comment?anime_id=${animeInfo.id}&skip=${skip}&limit=10`, {
-      method: 'GET',
-      headers: { 
-        'Content-Type': 'application/json', 
-        'Authorization': `Bearer ${localStorage.getItem('token')}` 
+    fetchWithAuth(`/comment?anime_id=${animeInfo.id}&skip=${skip}&limit=10`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
       .then((response) => {
@@ -107,19 +110,26 @@ const AnimeDialog = ({ isDialogOpen, animeInfo, closeDialog }) => {
       })
       .then((data) => {
         if (data.data.length < 10) {
-          console.log('No more comments');
+          console.log("No more comments");
           setHasNext(false);
         }
-        setComments([...comments, ...(Array.isArray(data.data) ? data.data : (data.data ? [data.data] : []))]);
+        setComments([
+          ...comments,
+          ...(Array.isArray(data.data)
+            ? data.data
+            : data.data
+              ? [data.data]
+              : []),
+        ]);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }
+  };
 
-    useEffect(() => {
-      fetchAnimeComments(0);
-    }, []);
+  useEffect(() => {
+    fetchAnimeComments(0);
+  }, []);
 
   return (
     <div
@@ -195,43 +205,67 @@ const AnimeDialog = ({ isDialogOpen, animeInfo, closeDialog }) => {
         )}
 
         <div className="my-4">
-          <h2 className="text-xl font-bold mb-2">{t("animeDialog.comments")}</h2>
+          <h2 className="text-xl font-bold mb-2">
+            {t("animeDialog.comments")}
+          </h2>
           <div className="mt-4">
             {comments && comments.length === 0 && (
               <p>{t("animeDialog.noComments")}</p>
             )}
             {comments && comments.length > 0 && (
               <>
-              {comments.map((comment, index) => (
-                <div key={`${comment.id}-${index}`} className="border-b border-gray-300 py-2 flex justify-between max-w-full">
-                  <div className="flex flex-col items-start text-left w-3/4">
-                    <figure className="flex items-center">
-                      <img
-                        src={`https://ui-avatars.com/api/?name=${comment.username}`}
-                        alt={comment.username}
-                        className="w-8 h-8 rounded-full mr-2"
-                      />
-                      <fiurecaption className="text-sm font-bold">{comment.username}</fiurecaption>
-                    </figure>
-                    <p className="text-sm text-wrap break-words w-full">{comment.content}</p>
+                {comments.map((comment, index) => (
+                  <div
+                    key={`${comment.id}-${index}`}
+                    className="border-b border-gray-300 py-2 flex justify-between max-w-full"
+                  >
+                    <div className="flex flex-col items-start text-left w-3/4">
+                      <figure className="flex items-center">
+                        <img
+                          src={`https://ui-avatars.com/api/?name=${comment.username}`}
+                          alt={comment.username}
+                          className="w-8 h-8 rounded-full mr-2"
+                        />
+                        <fiurecaption className="text-sm font-bold">
+                          {comment.username}
+                        </fiurecaption>
+                      </figure>
+                      <p className="text-sm text-wrap break-words w-full">
+                        {comment.content}
+                      </p>
+                    </div>
+                    {comment.user_id === user.id && (
+                      <button
+                        className="btn btn-sm btn-error mt-2 text-red-500"
+                        onClick={() => deleteComment(comment.id)}
+                      >
+                        X
+                      </button>
+                    )}
                   </div>
-                  {comment.user_id === user.id && (
-                    <button className="btn btn-sm btn-error mt-2 text-red-500" onClick={() => deleteComment(comment.id)}>X</button>
-                  )}
-                </div>
-              ))}
-              {hasNext && (
-                <button className="btn btn-primary my-2" onClick={() => fetchAnimeComments(comments.length)}>{t("animeDialog.loadMore")}</button>
-              )}
+                ))}
+                {hasNext && (
+                  <button
+                    className="btn btn-primary my-2"
+                    onClick={() => fetchAnimeComments(comments.length)}
+                  >
+                    {t("animeDialog.loadMore")}
+                  </button>
+                )}
               </>
             )}
-            
           </div>
           <textarea
-            className="w-full p-2 border rounded-lg"
+            className="w-full p-2 border rounded-lg border-gray-300 bg-gray-100 mt-2"
             placeholder={t("animeDialog.addComment")}
+            onChange={(e) => setCommentContent(e.target.value)}
+            value={commentContent}
           ></textarea>
-          <button className="btn btn-primary mt-2" onClick={() => addComment()}>
+          <button
+            className="btn btn-primary mt-2"
+            onClick={() => addComment()}
+            disabled={commentContent.length === 0}
+          >
             {t("animeDialog.addComment")}
           </button>
         </div>

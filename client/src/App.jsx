@@ -2,9 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "../node_modules/react-i18next";
-import { useAuth } from './AuthContext';
+import { useAuth } from "./AuthContext";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { IoSettingsOutline } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import {
   GiFragmentedSword,
@@ -304,82 +303,88 @@ const App = () => {
   return (
     <>
       <div className="container mx-auto px-4">
-      <div className="flex justify-between space-x-4 my-2">
-        <ThemeToggle />
-        <ProfileHeader />
-        <div className="flex flex-end flex-wrap text-center justify-center items-center">
-          <LanguageToggle />
-          <CiLogout onClick={logout} className="text-lg cursor-pointer m-2 transition duration-300 ease-in-out transform hover:scale-110 self-center text-red-500 text-center" hidden={!isAuthenticated} />
+        <div className="flex justify-between space-x-4 my-2">
+          <ThemeToggle />
+          <ProfileHeader />
+          <div className="flex flex-end flex-wrap text-center justify-center items-center">
+            <LanguageToggle />
+            <CiLogout
+              onClick={logout}
+              className="text-lg cursor-pointer m-2 transition duration-300 ease-in-out transform hover:scale-110 self-center text-red-500 text-center"
+              hidden={!isAuthenticated}
+            />
+          </div>
         </div>
+        <Brand />
+        {isAuthenticated ? (
+          <div className="fadeIn">
+            <TypeSelector
+              selectedMood={selectedMood}
+              setSelectedMood={setSelectedMood}
+            />
+            <GenreSelector
+              genres={genres}
+              selectedGenres={selectedGenres}
+              handleGenreToggle={handleGenreToggle}
+            />
+            <KeywordsSelector
+              selectedKeywords={selectedKeywords}
+              handleKeywordSelect={handleKeywordSelect}
+              handleKeywordDelete={handleKeywordDelete}
+            />
+            <div className="flex justify-center w-full">
+              <button
+                disabled={
+                  selectedGenres.length === 0 && selectedKeywords.length === 0
+                }
+                className="btn btn-primary my-5 mx-auto block"
+                onClick={handleSubmit}
+              >
+                {t("submit")}
+              </button>
+            </div>
+            <AnimeList
+              animeList={animeList}
+              currentPage={currentPage}
+              noMoreData={noMoreData}
+              openAnimeDialog={openAnimeDialog}
+              handleImageClick={handleImageClick}
+              searchingAnime={animeLoading}
+            />
+            {isAnimeDialogOpen && (
+              <AnimeDialog
+                isDialogOpen={isAnimeDialogOpen}
+                animeInfo={animeInfo}
+                closeDialog={() => setIsAnimeDialogOpen(false)}
+              />
+            )}
+            {animeLoading && (
+              <div className="my-4 mx-auto justify-center flex">
+                <AiOutlineLoading3Quarters />
+              </div>
+            )}
+            <footer className="text-center my-8">
+              <p>
+                {t("footer")}{" "}
+                <a
+                  href={t("footerLink")}
+                  target="_blank"
+                  className="text-blue-500 hover:underline"
+                >
+                  {" "}
+                  {t("author")}
+                </a>
+              </p>
+            </footer>
+          </div>
+        ) : (
+          <div className="fadeIn">
+            <Login />
+          </div>
+        )}
       </div>
-      <Brand />
-      {isAuthenticated ? (
-      <>
-      <TypeSelector
-        selectedMood={selectedMood}
-        setSelectedMood={setSelectedMood}
-      />
-      <GenreSelector
-        genres={genres}
-        selectedGenres={selectedGenres}
-        handleGenreToggle={handleGenreToggle}
-      />
-      <KeywordsSelector
-        selectedKeywords={selectedKeywords}
-        handleKeywordSelect={handleKeywordSelect}
-        handleKeywordDelete={handleKeywordDelete}
-      />
-      <div className="flex justify-center w-full">
-        <button
-          disabled={selectedGenres.length === 0 && selectedKeywords.length === 0}
-          className="btn btn-primary my-5 mx-auto block"
-          onClick={handleSubmit}
-        >
-        {t("submit")}
-        </button>
-      </div>
-      <AnimeList
-        animeList={animeList}
-        currentPage={currentPage}
-        noMoreData={noMoreData}
-        openAnimeDialog={openAnimeDialog}
-        handleImageClick={handleImageClick}
-        searchingAnime={animeLoading}
-      />
-      {isAnimeDialogOpen && (
-        <AnimeDialog
-          isDialogOpen={isAnimeDialogOpen}
-          animeInfo={animeInfo}
-          closeDialog={() => setIsAnimeDialogOpen(false)}
-        />
-      )}
-      {animeLoading && (
-        <div className="my-4 mx-auto justify-center flex">
-          <AiOutlineLoading3Quarters />
-        </div>
-      )}
-      <footer className="text-center my-8">
-        <p>
-          {t("footer")}{" "}
-          <a
-            href={t("footerLink")}
-            target="_blank"
-            className="text-blue-500 hover:underline"
-          >
-            {" "}
-            {t("author")}
-          </a>
-        </p>
-      </footer>
-      </>
-      ) : (
-        <>
-          <Login />
-        </>
-      )}
-      </div>
-      
-    <ToastContainer position="bottom-center" autoClose={3000} theme="dark" />
+
+      <ToastContainer position="bottom-center" autoClose={3000} theme="dark" />
     </>
   );
 };

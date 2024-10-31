@@ -1,6 +1,8 @@
-from app.auth.auth_handler import decode_jwt
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from fastapi.encoders import jsonable_encoder
+
+from app.limiter import limiter
+from app.auth.auth_handler import decode_jwt
 from app.auth.auth_bearer import JWTBearer
 from app.models.comment import CommentCreate, ResponseModel, ErrorResponseModel
 from app.database import add_comment, retrieve_comments, delete_comment as delete_comment
@@ -10,7 +12,8 @@ from datetime import datetime
 router = APIRouter()
 
 @router.post("", dependencies=[Depends(JWTBearer())])
-async def create_new_comment(comment: CommentCreate):
+@limiter.limit("10/minute")
+async def create_new_comment(request: Request, comment: CommentCreate):
     # Validate comment data
     comment_data = jsonable_encoder(comment)
     if len(comment_data['content']) < 10:
