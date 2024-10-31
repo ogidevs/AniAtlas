@@ -294,8 +294,10 @@ const App = () => {
 
   useEffect(() => {
     loadCookies();
-    setTimeout(() => setInitialLoad(false), 1500);
-  }, []);
+    if (isAuthenticated !== null) {
+      setInitialLoad(false);
+    }
+  }, [isAuthenticated]);
   if (initalLoad) {
     return <InitialLoad />;
   }
