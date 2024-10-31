@@ -1,0 +1,112 @@
+{
+  "brand": "AniAtlas",
+  "brandDesc": "An atlas of anime, mapped out for your pleasure.",
+  "submit": "Find Anime",
+  "loading": "Loading, please wait...",
+  "loadingComplete": "Loaded!",
+  "footer": "Made with ❤️ by",
+  "footerLink": "https://github.com/ogidevs/anime-suggestions",
+  "author": "Ognjen",
+  "error": {
+    "notFound": "Not Found",
+    "fetchingData": "Error Fetching Data",
+    "general": "An error occurred, please try again."
+  },
+  "profile": {
+    "username": "Username",
+    "email": "Email"
+  },
+  "login": {
+    "success": "Login Successful!",
+    "error": "Login Failed! Please try again.",
+    "title": "Login",
+    "desc": "Login to save your favorite anime and get personalized recommendations.",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password"
+  },
+  "register": {
+    "success": "Registration Successful!",
+    "error": "Registration Failed! Please try again.",
+    "title": "Register",
+    "desc": "Register to save your favorite anime and get personalized recommendations.",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "passwordMismatch": "Passwords do not match!",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Confirm your password"
+  },
+  "logout": {
+    "success": "Logout Successful!",
+    "error": "Logout Failed! Please try again.",
+    "title": "Logout",
+    "desc": "Logout to save your favorite anime and get personalized recommendations."
+  },
+  "animeCard": {
+    "aired": "Aired",
+    "rank": "Rank",
+    "type": "Type",
+    "source": "Source",
+    "episodes": "Episodes",
+    "duration": "Duration",
+    "rating": "Rating",
+    "score": "Score",
+    "numOfScores": "Scored By",
+    "status": "Status",
+    "genres": "Genres",
+    "themes": "Themes",
+    "licensors": "Licensors",
+    "studios": "Studios",
+    "moreInfo": "More Info",
+    "charactersInfo": "Characters Info",
+    "noAltTitle": "No Alternative Title"
+  },
+  "animeDialog": {
+    "fetchCharacters": "Fetch Characters",
+    "trailer": "Trailer",
+    "aniCrush": "AniCrush",
+    "close": "Close"
+  },
+  "animeList": {
+    "noAnime": "No Anime Found :(",
+    "noAnimeDesc": "No anime matches your query. Try again with different genres."
+  },
+  "genreSelector": {
+    "title": "Select Genres You Are Interested In",
+    "genres": {
+      "action": "Action",
+      "adventure": "Adventure",
+      "comedy": "Comedy",
+      "mythology": "Mythology",
+      "mystery": "Mystery",
+      "drama": "Drama",
+      "ecchi": "Ecchi",
+      "fantasy": "Fantasy",
+      "horror": "Horror",
+      "sliceOfLife": "Slice of Life",
+      "romance": "Romance",
+      "sports": "Sports",
+      "suspense": "Suspense",
+      "martialArts": "Martial Arts",
+      "school": "School",
+      "sciFi": "Sci-Fi",
+      "shounen": "Shounen"
+    }
+  },
+  "keywordsSelector": {
+    "title": "Add Keywords/Alternative Titles",
+    "add": "Add",
+    "clear": "Clear",
+    "placeholder": "Enter Keywords"
+  },
+  "typeSelector": {
+    "title": "Select Type of Anime",
+    "modern": "Modern",
+    "old": "Old"
+  }
+}

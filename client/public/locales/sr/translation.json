@@ -1,0 +1,108 @@
+{
+  "brand": "AniAtlas",
+  "brandDesc": "Atlas anime-a, mapiran za tvoje zadovoljstvo.",
+  "submit": "Nadji Anime",
+  "loading": "Učitavanje, molimo sačekajte...",
+  "loadingComplete": "Učitano!",
+  "footer": "Napravio s ❤️",
+  "footerLink": "https://github.com/ogidevs/anime-suggestions",
+  "author": "Ognjen",
+  "error": {
+    "notFound": "Nije pronađeno",
+    "fetchingData": "Greška prilikom dohvatanja podataka",
+    "general": "Došlo je do greške, pokušaj ponovo."
+  },
+  "login": {
+    "success": "Prijava uspešna!",
+    "error": "Prijava neuspešna! Pokušaj ponovo.",
+    "title": "Prijava",
+    "desc": "Prijavi se da sačuvaš svoje omiljene anime i dobiješ personalizovane preporuke.",
+    "username": "Korisničko ime",
+    "usernamePlaceholder": "Unesi svoje korisničko ime",
+    "password": "Lozinka",
+    "passwordPlaceholder": "Unesi svoju lozinku"
+  },
+  "register": {
+    "success": "Registracija uspešna!",
+    "error": "Registracija neuspešna! Pokušaj ponovo.",
+    "title": "Registracija",
+    "desc": "Registruj se da sačuvaš svoje omiljene anime i dobiješ personalizovane preporuke.",
+    "username": "Korisničko ime",
+    "usernamePlaceholder": "Unesi svoje korisničko ime",
+    "email": "Email",
+    "emailPlaceholder": "Unesi svoj email",
+    "password": "Lozinka",
+    "passwordPlaceholder": "Unesi svoju lozinku",
+    "passwordMismatch": "Lozinke se ne poklapaju!",
+    "confirmPassword": "Potvrdi Lozinku",
+    "confirmPasswordPlaceholder": "Potvrdi svoju lozinku"
+  },
+  "logout": {
+    "success": "Odjava uspešna!",
+    "error": "Odjava neuspešna! Pokušaj ponovo.",
+    "title": "Odjava",
+    "desc": "Odjavi se da sačuvaš svoje omiljene anime i dobiješ personalizovane preporuke."
+  },
+  "animeCard": {
+    "aired": "Emitovano",
+    "rank": "Rang",
+    "type": "Tip",
+    "source": "Izvor",
+    "episodes": "Epizode",
+    "duration": "Trajanje",
+    "rating": "Ocena",
+    "score": "Rezultat",
+    "numOfScores": "Ocena",
+    "status": "Status",
+    "genres": "Žanrovi",
+    "themes": "Teme",
+    "licensors": "Licence",
+    "studios": "Studiji",
+    "moreInfo": "Više informacija",
+    "charactersInfo": "Informacije o likovima",
+    "noAltTitle": "Nema drugog naslova"
+  },
+  "animeDialog": {
+    "fetchCharacters": "Učitaj karaktere",
+    "trailer": "Trejler",
+    "aniCrush": "AniCrush",
+    "close": "Zatvori"
+  },
+  "animeList": {
+    "noAnime": "Nema pronadjenih anime-a :(",
+    "noAnimeDesc": "Pokušaj ponovo sa drugim žanrovima."
+  },
+  "genreSelector": {
+    "title": "Izaberi žanrove koji te interesuju",
+    "genres": {
+      "action": "Akcija",
+      "adventure": "Avantura",
+      "comedy": "Komedija",
+      "mythology": "Mitologija",
+      "mystery": "Misterija",
+      "drama": "Drama",
+      "ecchi": "Eči",
+      "fantasy": "Fantazija",
+      "horror": "Horor",
+      "sliceOfLife": "Deo života",
+      "romance": "Romansa",
+      "sports": "Sport",
+      "suspense": "Napetost",
+      "martialArts": "Borbene veštine",
+      "school": "Škola",
+      "sciFi": "Naučna fantastika",
+      "shounen": "Šounen"
+    }
+  },
+  "keywordsSelector": {
+    "title": "Dodaj ključne reči/Alternativne naslove",
+    "add": "Dodaj",
+    "clear": "Očisti",
+    "placeholder": "Unesi Ključne Reči"
+  },
+  "typeSelector": {
+    "title": "Izaberi tip anime-a",
+    "modern": "Moderni",
+    "old": "Stari"
+  }
+}
