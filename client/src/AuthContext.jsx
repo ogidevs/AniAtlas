@@ -1,4 +1,3 @@
-// src/AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +17,9 @@ export const AuthProvider = ({ children }) => {
             if (authStatus) {
                 const profile = await authService.getProfile();
                 setUser(profile);
+            } else {
+                setUser(null);
+                authService.logout();
             }
         };
         checkAuthStatus();
@@ -37,9 +39,16 @@ export const AuthProvider = ({ children }) => {
     };
 
     const register = async (username, email, password) => {
-        const user = await authService.register(username, email, password);
-        setUser(user);
-        setIsAuthenticated(true);
+        try {
+            const user = await authService.register(username, email, password);
+            if (!user) return;
+            setUser(user);
+            setIsAuthenticated(true);
+            toast.success(t('register.success'));
+        } catch (error) {
+            toast.error(error.message);
+            console.error('Register error:', error);
+        }
     }
 
     const logout = () => {

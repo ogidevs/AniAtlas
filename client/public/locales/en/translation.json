@@ -70,6 +70,13 @@
     "fetchCharacters": "Fetch Characters",
     "trailer": "Trailer",
     "aniCrush": "AniCrush",
+    "comments": "Comments",
+    "noComments": "No Comments Yet",
+    "addComment": "Add Comment",
+    "commentAdded": "Comment Added!",
+    "commentDeleted": "Comment Deleted!",
+    "loadMore": "Load More",
+    "submitComment": "Submit Comment",
     "close": "Close"
   },
   "animeList": {

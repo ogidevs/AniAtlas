@@ -1,13 +1,14 @@
 # app/app.py
 
-from fastapi import FastAPI, Depends
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI
 from starlette.responses import FileResponse
 from app.routes.user import router as UserRouter
+from app.routes.comment import router as CommentRouter
 from fastapi.staticfiles import StaticFiles
 import os
 app = FastAPI()
 app.include_router(UserRouter, tags=["User"], prefix="/user")
+app.include_router(CommentRouter, tags=["Comment"], prefix="/comment")
 app.mount("/client/", StaticFiles(directory="../client/dist", html=True), name="static")
 
 @app.get("/{full_path:path}")

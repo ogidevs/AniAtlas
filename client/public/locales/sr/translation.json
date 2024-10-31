@@ -66,6 +66,13 @@
     "fetchCharacters": "Učitaj karaktere",
     "trailer": "Trejler",
     "aniCrush": "AniCrush",
+    "comments": "Komentari",
+    "addComment": "Dodaj Komentar",
+    "submitComment": "Pošalji",
+    "commentAdded": "Komentar dodat!",
+    "commentDeleted": "Komentar obrisan!",
+    "loadMore": "Učitaj više",
+    "noComments": "Još uvek nema komentara",
     "close": "Zatvori"
   },
   "animeList": {

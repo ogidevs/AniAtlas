@@ -8,7 +8,6 @@ from app.database import (
     delete_user,
     retrieve_user,
     retrieve_user_by_username,
-    retrieve_users,
     update_user,
 )
 
@@ -47,6 +46,11 @@ async def user_login(user: UserLogin = Body(...)):
             return ResponseModel(user_data, "User logged in successfully.")
     return ErrorResponseModel("An error occurred.", 404, "Incorrect username or password.")
 
+@router.get("/verify", response_description="Token verified", dependencies=[Depends(JWTBearer())])
+async def verify_token():
+    return ResponseModel(True, "Token is valid")
+
+
 @router.post("/token/refresh", response_description="Token refreshed", dependencies=[Depends(JWTBearer())])
 async def refresh_token(token: str = Depends(JWTBearer())):
     decoded_token = decode_jwt(token)
@@ -57,16 +61,18 @@ async def refresh_token(token: str = Depends(JWTBearer())):
 async def get_user_data(token: str = Depends(JWTBearer())):
     decoded_token = decode_jwt(token)
     user = await retrieve_user(decoded_token['user_id'])
+    user["token"] = token
     if user:
         return ResponseModel(user, "User data retrieved successfully")
     return ErrorResponseModel("An error occurred.", 404, "User doesn't exist.")
 
 @router.put("/{id}", response_description="User data updated", dependencies=[Depends(JWTBearer())])
-async def update_user_data(id: str, req: UpdateUserModel = Body(...)):
+async def update_user_data(id: str, req: UpdateUserModel = Body(...), token: str = Depends(JWTBearer())):
     req = {k: v for k, v in req.dict().items() if v is not None}
     hashed_password = hash_password(req["password"])
     req["password"] = hashed_password
     updated_user = await update_user(id, req)
+    updated_user["token"] = token
     if updated_user == None:
         return ErrorResponseModel("An error occurred.", 404, "User with this email already exists.")
     if updated_user:

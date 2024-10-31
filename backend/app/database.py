@@ -8,6 +8,7 @@ client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 database = client.aniatlas
 
 user_collection = database.get_collection("user_collection")
+comment_collection = database.get_collection("comment_collection")
 
 # Helper function to convert MongoDB document to Python dictionary
 def user_helper(user) -> dict:
@@ -16,6 +17,16 @@ def user_helper(user) -> dict:
         "username": user["username"],
         "password": user["password"],
         "email": user["email"],
+    }
+
+def comment_helper(comment) -> dict:
+    return {
+        "id": str(comment["_id"]),
+        "created_at": comment["created_at"],
+        "content": comment["content"],
+        "user_id": comment["user_id"],
+        "username": comment["username"],
+        "anime_id": comment["anime_id"],
     }
 
 async def retrieve_users():
@@ -74,4 +85,25 @@ async def delete_user(id: str):
         return True
     else:
         return None
+    
+async def add_comment(comment_data: dict) -> dict:
+    comment = await comment_collection.insert_one(comment_data)
+    new_comment = await comment_collection.find_one({"_id": comment.inserted_id})
+    return comment_helper(new_comment)
+
+async def delete_comment(id: str, user_id: str):
+    comment = await comment_collection.find_one({"_id": ObjectId(id), "user_id": user_id})
+    if comment:
+        await comment_collection.delete_one({"_id": ObjectId(id)})
+        return comment_helper(comment)
+    else:
+        return None
+
+async def retrieve_comments(anime_id: int, skip: int, limit: int) -> list[dict]:
+    comments = []
+    async for comment in comment_collection.find({"anime_id": anime_id}).skip(skip).limit(limit):
+        comments.append(comment_helper(comment))
+    if not comments or len(comments) == 0:
+        return None
+    return comments
     

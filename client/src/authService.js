@@ -15,11 +15,13 @@ const authService = {
             const response = await fetch(`/user/verify`, {
                 method: 'GET',
                 headers: authService.getAuthHeaders(),
+                cache: 'no-store',
             });
 
             if (!response.ok) {
+                authService.removeToken();
                 const { detail } = await response.json();
-                console.error('Verification failed:', detail[0]?.msg || 'Unknown error');
+                console.error('Verification failed:', detail.msg || 'Unknown error');
                 return false;
             }
 
@@ -36,11 +38,12 @@ const authService = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
+                cache: 'no-store',
             });
 
             const data = await response.json();
             if (!response.ok || !data.data?.token) {
-                throw new Error(data.detail[0]?.msg || data.message || 'Login failed');
+                throw new Error(data.detail?.msg || data.message || 'Login failed');
             }
 
             authService.setToken(data.data.token);
@@ -56,6 +59,7 @@ const authService = {
             const response = await fetch(`/user/me`, {
                 method: 'GET',
                 headers: authService.getAuthHeaders(),
+                cache: 'no-store',
             });
 
             const data = await response.json();
@@ -76,6 +80,7 @@ const authService = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, email, password }),
+                cache: 'no-store',
             });
 
             const data = await response.json();
