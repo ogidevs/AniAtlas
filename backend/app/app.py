@@ -9,7 +9,6 @@ from fastapi.responses import JSONResponse
 
 from app.routes.user import router as UserRouter
 from app.routes.comment import router as CommentRouter
-from app.routes.favorite import router as FavoriteRouter
 from app.limiter import limiter
 
 import os
@@ -18,7 +17,6 @@ app = FastAPI()
 app.state.limiter = limiter
 app.include_router(UserRouter, tags=["User"], prefix="/user")
 app.include_router(CommentRouter, tags=["Comment"], prefix="/comment")
-app.include_router(FavoriteRouter, tags=["Favorite"], prefix="/favorite")
 app.mount("/client/", StaticFiles(directory="../client/dist", html=True), name="static")
 
 @app.get("/{full_path:path}", include_in_schema=False)
