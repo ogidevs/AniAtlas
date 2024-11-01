@@ -14,13 +14,21 @@ class UserLogin(BaseModel):
 class UpdateUserModel(BaseModel):
     password: Optional[str]
 
-
-def ResponseModel(data, message):
-    return {
-        "data": data,
-        "code": 200,
-        "message": message,
-    }
+class UserInDBBase(BaseModel):
+    id: str
+    username: str
+    token: str
+    email: EmailStr
     
-def ErrorResponseModel(error, code, message):
-    return {"error": error, "code": code, "message": message}
+    class Config:
+        orm_mode = True
+
+class ResponseModel(BaseModel):
+    data: Optional[UserInDBBase] = None
+    code: int = 200
+    message: str
+    
+class ErrorResponseModel(BaseModel):
+    error: str
+    code: int
+    message: str

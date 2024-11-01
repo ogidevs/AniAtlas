@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from app.limiter import limiter
 from app.auth.auth_handler import decode_jwt
 from app.auth.auth_bearer import JWTBearer
-from app.models.comment import CommentCreate, ResponseModel, ErrorResponseModel
+from app.schemas.comment import CommentCreate, ResponseModel, ErrorResponseModel
 from app.database import add_comment, retrieve_comments, delete_comment as delete_comment
 
 from datetime import datetime
