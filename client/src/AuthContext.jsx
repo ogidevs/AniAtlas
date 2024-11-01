@@ -13,10 +13,15 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       const authStatus = await authService.isAuthenticated();
-      setIsAuthenticated(authStatus);
       if (authStatus) {
-        const profile = await authService.getProfile();
-        setUser(profile);
+        try {
+          const profile = await authService.getProfile();
+          setUser(profile);
+          setIsAuthenticated(authStatus);
+        } catch (error) {
+          toast.error(error.message);
+          logout();
+        }
       } else {
         logout();
       }
@@ -33,7 +38,6 @@ export const AuthProvider = ({ children }) => {
       toast.success(t("login.success"));
     } catch (error) {
       toast.error(error.message);
-      console.error("Login error:", error);
     }
   };
 
@@ -46,7 +50,6 @@ export const AuthProvider = ({ children }) => {
       toast.success(t("register.success"));
     } catch (error) {
       toast.error(error.message);
-      console.error("Register error:", error);
     }
   };
 

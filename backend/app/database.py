@@ -1,9 +1,14 @@
 import motor.motor_asyncio
 from bson.objectid import ObjectId
 
-MONGO_DETAILS = "mongodb://localhost:27017"
+import os
+from dotenv import load_dotenv
 
-client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
+load_dotenv()
+
+MONGODB_URL = os.getenv("MONGODB_URL")
+
+client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_URL)
 
 database = client.aniatlas
 

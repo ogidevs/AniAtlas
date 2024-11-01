@@ -61,10 +61,10 @@ async def refresh_token(token: str = Depends(JWTBearer())):
 async def get_user_data(token: str = Depends(JWTBearer())):
     decoded_token = decode_jwt(token)
     user = await retrieve_user(decoded_token['user_id'])
+    if user == None:
+        return ErrorResponseModel("An error occurred.", 404, "User doesn't exist.")
     user["token"] = token
-    if user:
-        return ResponseModel(user, "User data retrieved successfully")
-    return ErrorResponseModel("An error occurred.", 404, "User doesn't exist.")
+    return ResponseModel(user, "User data retrieved successfully")
 
 @router.put("/{id}", response_description="User data updated", dependencies=[Depends(JWTBearer())])
 async def update_user_data(id: str, req: UpdateUserModel = Body(...), token: str = Depends(JWTBearer())):
@@ -72,18 +72,12 @@ async def update_user_data(id: str, req: UpdateUserModel = Body(...), token: str
     hashed_password = hash_password(req["password"])
     req["password"] = hashed_password
     updated_user = await update_user(id, req)
-    updated_user["token"] = token
     if updated_user == None:
         return ErrorResponseModel("An error occurred.", 404, "User with this email already exists.")
-    if updated_user:
-        return ResponseModel(
-            "User with ID: {} name update is successful".format(id),
-            "User name updated successfully",
-        )
-    return ErrorResponseModel(
-        "An error occurred",
-        404,
-        "There was an error updating the user data.",
+    updated_user["token"] = token
+    return ResponseModel(
+        updated_user,
+        "User name updated successfully",
     )
     
 @router.delete("/{id}", response_description="User data deleted from the database", dependencies=[Depends(JWTBearer())])
