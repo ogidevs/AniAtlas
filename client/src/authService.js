@@ -1,6 +1,10 @@
 // src/authService.js
 
+let API_URL = "http://localhost:8000";
+
 const authService = {
+
+
   getToken: () => localStorage.getItem("token"),
 
   setToken: (token) => localStorage.setItem("token", token),
@@ -24,7 +28,7 @@ const authService = {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     };
-    return fetch(url, { ...options, headers });
+    return fetch(API_URL + url, { ...options, headers });
   },
 
   isAuthenticated: async () => {
@@ -32,7 +36,7 @@ const authService = {
     if (!token) return false;
 
     try {
-      const response = await fetch(`/user/verify`, {
+      const response = await fetch(`${API_URL}/user/verify`, {
         method: "GET",
         headers: authService.getAuthHeaders(),
         cache: "no-store",
@@ -54,7 +58,7 @@ const authService = {
 
   login: async (username, password) => {
     try {
-      const response = await fetch(`/user/signin`, {
+      const response = await fetch(`${API_URL}/user/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -76,7 +80,7 @@ const authService = {
 
   getProfile: async () => {
     try {
-      const response = await fetch(`/user/me`, {
+      const response = await fetch(`${API_URL}/user/me`, {
         method: "GET",
         headers: authService.getAuthHeaders(),
         cache: "no-store",
@@ -98,7 +102,7 @@ const authService = {
 
   register: async (username, email, password) => {
     try {
-      const response = await fetch(`/user/signup`, {
+      const response = await fetch(`${API_URL}/user/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),

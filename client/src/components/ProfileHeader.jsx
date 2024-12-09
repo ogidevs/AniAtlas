@@ -14,9 +14,9 @@ const ProfileHeader = () => {
             alt={user.username}
             className="w-8 h-8 rounded-full mr-2"
           />
-          <fiurecaption className="text-2xl font-bold">
+          <p className="text-2xl font-bold">
             {user.username}
-          </fiurecaption>
+          </p>
         </figure>
         <p className="text-sm text-gray-600">{user.email}</p>
       </div>

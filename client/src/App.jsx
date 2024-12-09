@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useTranslation } from "../node_modules/react-i18next";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "./AuthContext";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { CiLogout } from "react-icons/ci";
@@ -385,7 +386,6 @@ const App = () => {
           </div>
         )}
       </div>
-
       <ToastContainer position="bottom-center" autoClose={3000} theme="dark" />
     </>
   );

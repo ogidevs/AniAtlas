@@ -3,6 +3,7 @@
 from fastapi import FastAPI
 from starlette.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 from slowapi.errors import RateLimitExceeded
 from fastapi.responses import JSONResponse
@@ -17,20 +18,16 @@ app = FastAPI()
 app.state.limiter = limiter
 app.include_router(UserRouter, tags=["User"], prefix="/user")
 app.include_router(CommentRouter, tags=["Comment"], prefix="/comment")
-app.mount("/client/", StaticFiles(directory="../client/dist", html=True), name="static")
 
-@app.get("/{full_path:path}", include_in_schema=False)
-async def serve_react_app(full_path: str):
-    file_path = os.path.join("dist", full_path)
-    
-    # Check if the path is a file in the dist directory
-    if os.path.exists(file_path) and not os.path.isdir(file_path):
-        # Serve the requested file (JS, CSS, etc.)
-        return FileResponse(file_path)
-    else:
-        # Fallback to index.html for client-side routes
-        return FileResponse(os.path.join("../client/dist", "index.html")) 
-    
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Exception handler for rate limit exceeded errors
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_exceeded_handler(request, exc):

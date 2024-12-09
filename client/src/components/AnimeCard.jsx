@@ -1,7 +1,7 @@
 // components/AnimeCard.jsx
 import React, { useState } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
-import { useTranslation } from "../../node_modules/react-i18next";
+import { useTranslation } from "react-i18next";
 
 const AnimeCard = ({ anime, openAnimeDialog, handleImageClick }) => {
   const { t } = useTranslation();

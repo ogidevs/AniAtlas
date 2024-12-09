@@ -44,7 +44,7 @@ async def user_login(user: UserLogin = Body(...)):
             token = sign_jwt(user_data["id"])
             user_data["token"] = token["access_token"]
             return ResponseModel(data=user_data, message="User logged in successfully.")
-    return ErrorResponseModel("An error occurred.", 404, "Incorrect username or password.")
+    return ErrorResponseModel(error="An error occurred.", code=404, message="Incorrect username or password.")
 
 @router.get("/verify", response_description="Token verified", dependencies=[Depends(JWTBearer())])
 async def verify_token():

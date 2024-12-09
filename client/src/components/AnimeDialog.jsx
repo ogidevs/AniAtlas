@@ -226,9 +226,9 @@ const AnimeDialog = ({ isDialogOpen, animeInfo, closeDialog }) => {
                           alt={comment.username}
                           className="w-8 h-8 rounded-full mr-2"
                         />
-                        <fiurecaption className="text-sm font-bold">
+                        <p className="text-sm font-bold">
                           {comment.username}
-                        </fiurecaption>
+                        </p>
                       </figure>
                       <p className="text-sm text-wrap break-words w-full">
                         {comment.content}
