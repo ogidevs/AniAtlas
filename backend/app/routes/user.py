@@ -1,5 +1,7 @@
 from app.auth.auth_handler import decode_jwt, sign_jwt
 from fastapi import APIRouter, Body, Depends
+from fastapi.responses import JSONResponse
+from typing import List
 from fastapi.encoders import jsonable_encoder
 from app.auth.auth_bearer import JWTBearer
 
@@ -8,6 +10,7 @@ from app.database import (
     delete_user,
     retrieve_user,
     retrieve_user_by_username,
+    retrieve_all_users,
     update_user,
 )
 
@@ -30,7 +33,7 @@ async def user_register(user: UserRegister = Body(...)):
     user = jsonable_encoder(user)
     new_user = await add_user(user)
     if new_user == None:
-        return ErrorResponseModel("An error occurred.", 404, "User with this email or username already exists.")
+        return ErrorResponseModel(error="An error occurred.", code=404, message="User with this email or username already exists.")
     token = sign_jwt(new_user["id"])
     new_user["token"] = token["access_token"]
     return ResponseModel(data=new_user, message="User added successfully.")
@@ -62,9 +65,53 @@ async def get_user_data(token: str = Depends(JWTBearer())):
     decoded_token = decode_jwt(token)
     user = await retrieve_user(decoded_token['user_id'])
     if user == None:
-        return ErrorResponseModel("An error occurred.", 404, "User doesn't exist.")
+        return ErrorResponseModel(error="An error occurred.", code=404, message="User doesn't exist.")
     user["token"] = token
     return ResponseModel(data=user, message="User data retrieved successfully")
+
+@router.get("/all", response_description="Users data retrieved", dependencies=[Depends(JWTBearer())])
+async def get_users(token: str = Depends(JWTBearer())):
+    decoded_token = decode_jwt(token)
+    user = await retrieve_user(decoded_token['user_id'])
+    if user == None:
+        return ErrorResponseModel(error="An error occurred.", code=404, message="User doesn't exist.")
+    if not user["admin"]:
+        return ErrorResponseModel(error="An error occurred.", code=403, message="You are not an admin.")
+    users = await retrieve_all_users()
+    return ResponseModel(data=users, message="Users data retrieved successfully")
+
+
+@router.put("/{id}/disable", response_description="User disabled", dependencies=[Depends(JWTBearer())])
+async def disable_user(id: str, token: str = Depends(JWTBearer())):
+    decoded_token = decode_jwt(token)
+    user = await retrieve_user(decoded_token['user_id'])
+    if user == None:
+        return ErrorResponseModel(error="An error occurred.", code=404, message="User doesn't exist.")
+    if not user["admin"]:
+        return ErrorResponseModel(error="An error occurred.", code=403, message="You are not an admin.")
+    user = await retrieve_user(id)
+    if user == None:
+        return ErrorResponseModel(error="An error occurred.", code=404, message="User doesn't exist.")
+    success = await update_user(id, {"disabled": True})
+    if success:
+        return JSONResponse(content={"message": "User disabled successfully."})
+    return ErrorResponseModel(error="An error occurred.", code=404, message="An error occurred.")
+
+@router.put("/{id}/enable", response_description="User enabled", dependencies=[Depends(JWTBearer())])
+async def enable_user(id: str, token: str = Depends(JWTBearer())):
+    decoded_token = decode_jwt(token)
+    user = await retrieve_user(decoded_token['user_id'])
+    if user == None:
+        return ErrorResponseModel(error="An error occurred.", code=404, message="User doesn't exist.")
+    if not user["admin"]:
+        return ErrorResponseModel(error="An error occurred.", code=403, message="You are not an admin.")
+    user = await retrieve_user(id)
+    if user == None:
+        return ErrorResponseModel(error="An error occurred.", code=404, message="User doesn't exist.")
+    success = await update_user(id, {"disabled": False})
+    if success:
+        return JSONResponse(content={"message": "User disabled successfully."})
+    return ErrorResponseModel(error="An error occurred.", code=404, message="An error occurred.")
 
 @router.put("/{id}", response_description="User data updated", dependencies=[Depends(JWTBearer())])
 async def update_user_data(id: str, req: UpdateUserModel = Body(...), token: str = Depends(JWTBearer())):
@@ -73,7 +120,7 @@ async def update_user_data(id: str, req: UpdateUserModel = Body(...), token: str
     req["password"] = hashed_password
     updated_user = await update_user(id, req)
     if updated_user == None:
-        return ErrorResponseModel("An error occurred.", 404, "User with this email already exists.")
+        return ErrorResponseModel(error="An error occurred.", code=404, message="User with this email already exists.")
     updated_user["token"] = token
     return ResponseModel(
         data=updated_user,
@@ -88,5 +135,5 @@ async def delete_user_data(id: str):
             data="User with ID: {} removed".format(id), message="User deleted successfully"
         )
     return ErrorResponseModel(
-        "An error occurred", 404, "User with id {0} doesn't exist".format(id)
+        error="An error occurred", code=404, message="User with id {0} doesn't exist".format(id)
     )

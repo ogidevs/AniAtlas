@@ -15,7 +15,45 @@
     "forbidden": "Pristup zabranjen",
     "unauthorized": "Neovlašćen pristup",
     "tooManyRequests": "Previše zahteva. Pokušaj ponovo kasnije.",
-    "internalServerError": "Interna serverska greška. Pokušaj ponovo kasnije."
+    "internalServerError": "Interna serverska greška. Pokušaj ponovo kasnije.",
+    "searchDisabled": "Pretraga je onemogućena. Molimo kontaktiraj administratora."
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "desc": "Upravljaj aplikacijom i njenim korisnicima.",
+    "users": "Korisnici",
+    "fetchUsers": "Preuzmi Korisnike",
+    "fetchUsersError": "Greška prilikom preuzimanja korisnika",
+    "fetchUsersSuccess": "Korisnici preuzeti!",
+    "disableUser": "Onemogući Korisnika",
+    "disableUserSuccess": "Korisnik onemogućen!",
+    "disableUserError": "Greška prilikom onemogućavanja korisnika",
+    "enableUser": "Omogući Korisnika",
+    "enableUserSuccess": "Korisnik omogućen!",
+    "enableUserError": "Greška prilikom omogućavanja korisnika",
+    "fetchComments": "Preuzmi Komentare",
+    "fetchCommentsError": "Greška prilikom preuzimanja komentara",
+    "fetchCommentsSuccess": "Komentari preuzeti!",
+    "deleteComment": "Obriši Komentar",
+    "deleteCommentSuccess": "Komentar obrisan!",
+    "deleteCommentError": "Greška prilikom brisanja komentara",
+    "comment": {
+      "user": "Korisnik",
+      "anime": "Anime",
+      "content": "Sadržaj",
+      "createdAt": "Kreirano",
+      "delete": "Obriši"
+    },
+    "user": {
+      "username": "Korisničko ime",
+      "email": "Email",
+      "admin": "Admin",
+      "createdAt": "Kreirano",
+      "disabled": "Onemogućen",
+      "disable": "Onemogući",
+      "enable": "Omogući"
+    },
+    "closeModal": "Zatvori Modal"
   },
   "login": {
     "success": "Prijava uspešna!",
@@ -78,7 +116,9 @@
     "commentDeleted": "Komentar obrisan!",
     "loadMore": "Učitaj više",
     "noComments": "Još uvek nema komentara",
-    "close": "Zatvori"
+    "close": "Zatvori",
+    "openPage": "Otvori Stranicu",
+    "back": "Nazad"
   },
   "animeList": {
     "noAnime": "Nema pronadjenih anime-a :(",
@@ -116,5 +156,7 @@
     "title": "Izaberi tip anime-a",
     "modern": "Moderni",
     "old": "Stari"
-  }
+  },
+  "yes": "Da",
+  "no": "Ne"
 }

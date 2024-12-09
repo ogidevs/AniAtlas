@@ -5,7 +5,7 @@ from app.limiter import limiter
 from app.auth.auth_handler import decode_jwt
 from app.auth.auth_bearer import JWTBearer
 from app.schemas.comment import CommentCreate, ResponseModel, ErrorResponseModel
-from app.database import add_comment, retrieve_comments, delete_comment as delete_comment
+from app.database import add_comment, retrieve_comments, retrieve_user_comments, delete_comment as delete_comment, retrieve_user
 
 from datetime import datetime
 
@@ -43,3 +43,19 @@ async def delete_comment_r(comment_id: str, token: str = Depends(JWTBearer())):
     if db_comment is None:
         return ErrorResponseModel(message="An error occurred", code=404, detail="Comment not deleted")
     return ResponseModel(data=db_comment, message="Comment deleted successfully")
+
+@router.get("/{target_id}", dependencies=[Depends(JWTBearer())])
+async def read_user_comments(target_id: str, skip: int = 0, limit: int = 10, token: str = Depends(JWTBearer())):
+    decoded_token = decode_jwt(token)
+    if decoded_token["user_id"] is None:
+        return ErrorResponseModel("An error occurred", 404, "User not authenticated")
+    user = await retrieve_user(decoded_token["user_id"])
+    if user is None:
+        return ErrorResponseModel("An error occurred", 404, "User not found")
+    if not user["admin"]:
+        return ErrorResponseModel("An error occurred", 404, "User not authorized to view comments")
+    
+    comments = await retrieve_user_comments(user_id=target_id, skip=skip, limit=limit)
+    if not comments:
+        return ResponseModel(data=[], message="No comments found")
+    return ResponseModel(data=comments, message="Comments retrieved successfully")

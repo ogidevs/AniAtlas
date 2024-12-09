@@ -3,6 +3,7 @@ from bson.objectid import ObjectId
 
 import os
 from dotenv import load_dotenv
+import datetime
 
 load_dotenv()
 
@@ -21,6 +22,9 @@ def user_helper(user) -> dict:
         "username": user["username"],
         "password": user["password"],
         "email": user["email"],
+        "admin": user["admin"],
+        "created_at": user["created_at"],
+        "disabled": user["disabled"],
     }
     
 def comment_helper(comment) -> dict:
@@ -45,6 +49,9 @@ async def add_user(user_data: dict) -> dict:
     )
     if existing_user:
         return None
+    user_data["admin"] = False
+    user_data["disabled"] = False
+    user_data["created_at"] = datetime.datetime.now()
     user = await user_collection.insert_one(user_data)
     new_user = await user_collection.find_one({"_id": user.inserted_id})
     return user_helper(new_user)
@@ -55,6 +62,12 @@ async def retrieve_user(id: str) -> dict:
         return user_helper(user)
     else:
         return None
+    
+async def retrieve_all_users():
+    users = []
+    async for user in user_collection.find():
+        users.append(user_helper(user))
+    return users
 
 async def retrieve_user_by_email(email: str) -> dict:
     user = await user_collection.find_one({"email": email})
@@ -101,11 +114,24 @@ async def delete_comment(id: str, user_id: str):
         await comment_collection.delete_one({"_id": ObjectId(id)})
         return comment_helper(comment)
     else:
-        return None
+        comment = await comment_collection.find_one({"_id": ObjectId(id)})
+        user = await user_collection.find_one({"_id": ObjectId(user_id)})
+        if user["admin"]:
+            await comment_collection.delete_one({"_id": ObjectId(id)})
+            return comment_helper(comment)
+    return None
 
 async def retrieve_comments(anime_id: int, skip: int, limit: int) -> list[dict]:
     comments = []
     async for comment in comment_collection.find({"anime_id": anime_id}).skip(skip).limit(limit):
+        comments.append(comment_helper(comment))
+    if not comments or len(comments) == 0:
+        return None
+    return comments
+
+async def retrieve_user_comments(user_id: str, skip: int, limit: int) -> list[dict]:
+    comments = []
+    async for comment in comment_collection.find({"user_id": user_id}).skip(skip).limit(limit):
         comments.append(comment_helper(comment))
     if not comments or len(comments) == 0:
         return None

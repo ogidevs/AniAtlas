@@ -1,4 +1,5 @@
-from typing import Optional
+from typing import Optional, List, Union
+import datetime
 
 from pydantic import BaseModel, EmailStr, Field
 
@@ -17,14 +18,17 @@ class UpdateUserModel(BaseModel):
 class UserInDBBase(BaseModel):
     id: str
     username: str
-    token: str
+    token: Optional[str] = None
     email: EmailStr
+    admin: bool
+    disabled: bool
+    created_at: datetime.datetime
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ResponseModel(BaseModel):
-    data: Optional[UserInDBBase] = None
+    data: Optional[Union[UserInDBBase, List[UserInDBBase]]] = None
     code: int = 200
     message: str
     

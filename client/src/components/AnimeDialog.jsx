@@ -1,5 +1,6 @@
 // components/AnimeDialog.jsx
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -7,6 +8,7 @@ import { FaExternalLinkAlt } from "react-icons/fa";
 import { useAuth } from "../AuthContext";
 
 const AnimeDialog = ({ isDialogOpen, animeInfo, closeDialog }) => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { user, fetchWithAuth } = useAuth();
   const [characters, setCharacters] = useState([]);
@@ -234,7 +236,7 @@ const AnimeDialog = ({ isDialogOpen, animeInfo, closeDialog }) => {
                         {comment.content}
                       </p>
                     </div>
-                    {comment.user_id === user.id && (
+                    {(comment.user_id === user.id || user.admin) && (
                       <button
                         className="btn btn-sm btn-error mt-2 text-red-500"
                         onClick={() => deleteComment(comment.id)}
@@ -273,6 +275,21 @@ const AnimeDialog = ({ isDialogOpen, animeInfo, closeDialog }) => {
         <button className="btn btn-error mt-4" onClick={() => closeDialog()}>
           {t("animeDialog.close")}
         </button>
+        {window.location.href.includes("/anime") && (
+          <button
+            className="btn btn-primary mt-4 ml-2"
+            onClick={() => navigate(`/home`)}
+          >
+            {t("animeDialog.back")}
+          </button>
+        ) || (
+          <button
+            className="btn btn-primary mt-4 ml-2"
+            onClick={() => navigate(`/anime/${animeInfo.id}`)}
+          >
+            {t("animeDialog.openPage")}
+          </button>
+        )}
       </div>
     </div>
   );

@@ -15,7 +15,45 @@
     "forbidden": "Access Forbidden",
     "unauthorized": "Unauthorized Access",
     "tooManyRequests": "Too Many Requests. Please try again later.",
-    "internalServerError": "Internal Server Error. Please try again later."
+    "internalServerError": "Internal Server Error. Please try again later.",
+    "searchDisabled": "Search is disabled. Please contact the administrator."
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "desc": "Manage the application and its users.",
+    "users": "Users",
+    "fetchUsers": "Fetch Users",
+    "fetchUsersError": "Error Fetching Users",
+    "fetchUsersSuccess": "Users Fetched!",
+    "disableUser": "Disable User",
+    "disableUserSuccess": "User Disabled!",
+    "disableUserError": "Error Disabling User",
+    "enableUser": "Enable User",
+    "enableUserSuccess": "User Enabled!",
+    "enableUserError": "Error Enabling User",
+    "fetchComments": "Fetch Comments",
+    "fetchCommentsError": "Error Fetching Comments",
+    "fetchCommentsSuccess": "Comments Fetched!",
+    "deleteComment": "Delete Comment",
+    "deleteCommentSuccess": "Comment Deleted!",
+    "deleteCommentError": "Error Deleting Comment",
+    "comment": {
+      "user": "User",
+      "anime": "Anime",
+      "content": "Content",
+      "createdAt": "Created At",
+      "delete": "Delete"
+    },
+    "user": {
+      "username": "Username",
+      "email": "Email",
+      "admin": "Admin",
+      "createdAt": "Created At",
+      "disabled": "Disabled",
+      "disable": "Disable",
+      "enable": "Enable"
+    },
+    "closeModal": "Close Modal"
   },
   "profile": {
     "username": "Username",
@@ -82,7 +120,9 @@
     "commentDeleted": "Comment Deleted!",
     "loadMore": "Load More",
     "submitComment": "Submit Comment",
-    "close": "Close"
+    "close": "Close",
+    "openPage": "Open Page",
+    "back": "Back"
   },
   "animeList": {
     "noAnime": "No Anime Found :(",
@@ -120,5 +160,7 @@
     "title": "Select Type of Anime",
     "modern": "Modern",
     "old": "Old"
-  }
+  },
+  "yes": "Yes",
+  "no": "No"
 }

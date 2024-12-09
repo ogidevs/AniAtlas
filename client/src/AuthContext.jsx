@@ -66,16 +66,18 @@ export const AuthProvider = ({ children }) => {
         throw new Error(response.status);
       }
       const data = await response.clone().json();
-      if (data.code) {
+      if (data.code && data.code !== 200) {
         throw new Error(data.detail);
       }
       return response;
     } catch (error) {
       if (parseInt(error.message) === 401) {
         toast.error(t("error.unauthorized"));
+        window.location.href = "/login";
         logout();
       } else if (parseInt(error.message) === 403) {
         toast.error(t("error.forbidden"));
+        window.location.href = "/login";
         logout();
       } else if (parseInt(error.message) === 404) {
         toast.error(t("error.notFound"));
