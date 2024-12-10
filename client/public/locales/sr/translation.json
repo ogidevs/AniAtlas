@@ -18,6 +18,11 @@
     "internalServerError": "Interna serverska greška. Pokušaj ponovo kasnije.",
     "searchDisabled": "Pretraga je onemogućena. Molimo kontaktiraj administratora."
   },
+  "lander": {
+    "welcome": "Dobrodošli na ",
+    "desc": "Atlas anime-a, mapiran za tvoje zadovoljstvo.",
+    "getStarted": "Započni"
+  },
   "admin": {
     "title": "Admin Panel",
     "desc": "Upravljaj aplikacijom i njenim korisnicima.",
@@ -53,7 +58,7 @@
       "disable": "Onemogući",
       "enable": "Omogući"
     },
-    "closeModal": "Zatvori Modal"
+    "closeModal": "Zatvori"
   },
   "login": {
     "success": "Prijava uspešna!",

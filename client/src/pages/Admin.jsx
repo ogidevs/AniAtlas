@@ -10,7 +10,7 @@ import { API_URL } from "../config";
 const Admin = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { isAuthenticated, user, logout } = useAuth();
     const [userData, setUserData] = useState(null);
     const [commentData, setCommentData] = useState(null);
     
@@ -124,7 +124,7 @@ const Admin = () => {
 
     return (
         <div className="container mx-auto px-4">
-            <Header />
+            <Header logout={logout} isAuthenticated={isAuthenticated} />
             <div className="container mx-auto py-8">
                 <a href="/home" className="text-blue-500 hover:underline">{t("brand")}</a>
                 <h1 className="text-3xl font-bold mb-4">{t("admin.title")}</h1>
@@ -158,7 +158,8 @@ const Admin = () => {
                                                 <li key={comment.id} className="p-4 rounded-lg shadow-md">
                                                     <p className="text-lg font-medium"><strong>{t("admin.comment.content")}:</strong> {comment.content}</p>
                                                     <p className="text-lg font-medium"><strong>{t("admin.comment.user")}:</strong> {comment.username}</p>
-                                                    <p className="text-lg font-medium"><strong>{t("admin.comment.anime")}:</strong> {comment.anime_id}</p>
+                                                    <p className="text-lg font-medium"><strong>{t("admin.comment.anime")}:</strong> <a className="text-lg font-medium text-blue-500 hover:underline" href={`/anime/${comment.anime_id}`} target="_blank">{comment.anime_id}</a></p>
+                                                    
                                                     <p className="text-lg font-medium"><strong>{t("admin.comment.createdAt")}:</strong> {new Intl.DateTimeFormat("en-GB").format(new Date(comment.created_at))}</p>
                                                     <button className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded shadow-md m-4 transition duration-300 ease-in-out transform hover:scale-105" onClick={() => deleteUserComment(comment.id)}>{t("admin.comment.delete")}</button>
                                                 </li>

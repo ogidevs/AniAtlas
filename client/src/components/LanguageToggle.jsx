@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-const LanguageToggle = () => {
+const LanguageToggle = (color) => {
   const { i18n } = useTranslation();
 
   const changeLanguage = () => {
@@ -13,7 +13,7 @@ const LanguageToggle = () => {
   return (
     <div className="flex items-center justify-center">
       <p
-        className="text-lg cursor-pointer text-gray-500 transition duration-300 hover:text-gray-700"
+        className={`text-lg cursor-pointer ${color != null ? `text-${color}-500` : 'text-gray-500'} transition duration-300 hover:text-gray-700`}
         onClick={changeLanguage}
       >
         {i18n.language.toUpperCase() === "SR" ? "EN" : "SR"}

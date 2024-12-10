@@ -20,6 +20,7 @@ const App = () => {
         <Routes>
           {isAuthenticated !== null && (
             <>
+              <Route path="/" element={<Navigate to="/lander" />} />
               <Route path="/lander" element={<Lander />} />
               <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
               <Route path="/login" element={isAuthenticated ? <Navigate to="/home" /> : <Login />} />

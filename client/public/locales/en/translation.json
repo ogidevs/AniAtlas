@@ -18,6 +18,11 @@
     "internalServerError": "Internal Server Error. Please try again later.",
     "searchDisabled": "Search is disabled. Please contact the administrator."
   },
+  "lander": {
+    "welcome": "Welcome to ",
+    "desc": "An atlas of anime, mapped out for your pleasure.",
+    "getStarted": "Get Started"
+  },
   "admin": {
     "title": "Admin Panel",
     "desc": "Manage the application and its users.",

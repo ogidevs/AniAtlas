@@ -17,11 +17,12 @@ const AnimeDetail = () => {
       try {
         const response = await axios.get(`https://api.jikan.moe/v4/anime/${id}/full`);
         const data = response.data;
+        console.log(data);
 
         setAnimeInfo({
           id: data.data.mal_id,
           title: data.data.title,
-          synopsis: data.data.synopsis,
+          content: data.data.synopsis,
           trailer: data.data.trailer
         });
         setLoading(false);
