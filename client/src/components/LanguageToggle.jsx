@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 const LanguageToggle = (color) => {
   const { i18n } = useTranslation();
+  
+  useEffect(() => {
+    const lang = localStorage.getItem('userLang');
+    if (lang) {
+        i18n.changeLanguage(lang);
+    }
+  }, []);
 
   const changeLanguage = () => {
     const newLang = i18n.language === "en" ? "sr" : "en";

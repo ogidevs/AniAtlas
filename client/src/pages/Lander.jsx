@@ -4,17 +4,10 @@ import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
 
 const Lander = () => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const navigateToLogin = () => {
         window.location.href = '/login';
     };
-
-    useEffect(() => {
-        const lang = localStorage.getItem('userLang');
-        if (lang) {
-            i18n.changeLanguage(lang);
-        }
-    }, []);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600">

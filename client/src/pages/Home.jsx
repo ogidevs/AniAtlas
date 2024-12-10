@@ -37,7 +37,7 @@ import Header from "../components/Header";
 
 export const Home = () => {
   const { isAuthenticated, logout, user } = useAuth();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [animeList, setAnimeList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [initalLoad, setInitialLoad] = useState(true);
@@ -129,13 +129,6 @@ export const Home = () => {
     },
     { name: t("genreSelector.genres.shounen"), value: "27", icon: <MdBoy /> },
   ];
-
-  const loadCookies = () => {
-    const lang = localStorage.getItem("userLang");
-    if (lang) {
-      i18n.changeLanguage(lang);
-    }
-  };
 
   const fetchAnime = () => {
     if (user.disabled) {
@@ -289,11 +282,11 @@ export const Home = () => {
   }, []);
 
   useEffect(() => {
-    loadCookies();
     if (isAuthenticated !== null) {
       setInitialLoad(false);
     }
   }, [isAuthenticated]);
+  
   if (initalLoad) {
     return <InitialLoad />;
   }
