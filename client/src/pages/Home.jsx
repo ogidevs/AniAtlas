@@ -1,5 +1,6 @@
 // src/pages/Home.js
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
@@ -11,7 +12,6 @@ import {
   GiGreekTemple,
   GiMagnifyingGlass,
   GiDramaMasks,
-  GiHeartBeats,
   GiFairyWand,
   GiGhost,
   GiSlicedBread,
@@ -153,24 +153,18 @@ export const Home = () => {
         ? `&start_date=2010-01-01`
         : `&end_date=2005-01-01`);
 
-    fetch(apiUrl)
+    axios.get(apiUrl)
       .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok " + response.statusText);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data.pagination?.has_next_page === false) {
-          setNoMoreData(true);
-        }
-        setAnimeList((prev) => [...prev, ...data.data]);
-        setAnimeLoading(false);
+      if (response.data.pagination?.has_next_page === false) {
+        setNoMoreData(true);
+      }
+      setAnimeList((prev) => [...prev, ...response.data.data]);
+      setAnimeLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
-        toast.error(t("error.fetchingData") + ": " + error.message);
-        setAnimeLoading(false);
+      console.error("Error fetching data:", error);
+      toast.error(t("error.fetchingData") + ": " + error.message);
+      setAnimeLoading(false);
       });
   };
 

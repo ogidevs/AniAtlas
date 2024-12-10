@@ -59,43 +59,9 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   };
 
-  const fetchWithAuth = async (url, options = {}) => {
-    try {
-      const response = await authService.fetchWithAuth(url, options);
-      if (!response.ok) {
-        throw new Error(response.status);
-      }
-      const data = await response.clone().json();
-      if (data.code && data.code !== 200) {
-        throw new Error(data.detail);
-      }
-      return response;
-    } catch (error) {
-      if (parseInt(error.message) === 401) {
-        toast.error(t("error.unauthorized"));
-        window.location.href = "/login";
-        logout();
-      } else if (parseInt(error.message) === 403) {
-        toast.error(t("error.forbidden"));
-        window.location.href = "/login";
-        logout();
-      } else if (parseInt(error.message) === 404) {
-        toast.error(t("error.notFound"));
-      } else if (parseInt(error.message) === 429) {
-        toast.error(t("error.tooManyRequests"));
-      } else if (parseInt(error.message) === 500) {
-        toast.error(t("error.serverError"));
-      } else {
-        toast.error(error.message);
-      }
-      console.error("Error fetching data:", error.message);
-      throw error;
-    }
-  };
-
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, fetchWithAuth, login, logout, register, user }}
+      value={{ isAuthenticated, login, logout, register, user }}
     >
       {children}
     </AuthContext.Provider>

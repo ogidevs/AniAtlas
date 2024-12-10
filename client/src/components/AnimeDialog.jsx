@@ -1,16 +1,18 @@
 // components/AnimeDialog.jsx
 import React from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { useAuth } from "../AuthContext";
+import { API_URL } from "../config";
 
 const AnimeDialog = ({ isDialogOpen, animeInfo, closeDialog }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { user, fetchWithAuth } = useAuth();
+  const { user } = useAuth();
   const [characters, setCharacters] = useState([]);
   const [comments, setComments] = useState([]);
   const [commentContent, setCommentContent] = useState("");
@@ -18,19 +20,12 @@ const AnimeDialog = ({ isDialogOpen, animeInfo, closeDialog }) => {
 
   if (!isDialogOpen) return null;
   const fetchAnimeCharacters = async () => {
-    fetch(`https://api.jikan.moe/v4/anime/${animeInfo.id}/characters`)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw response;
-      })
-      .then((data) => {
-        setCharacters(data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    try {
+      const response = await axios.get(`https://api.jikan.moe/v4/anime/${animeInfo.id}/characters`);
+      setCharacters(response.data.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   const addComment = async () => {
@@ -40,93 +35,79 @@ const AnimeDialog = ({ isDialogOpen, animeInfo, closeDialog }) => {
       username: user.username,
       anime_id: animeInfo.id,
     };
-    fetchWithAuth(`/comment`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw response;
-      })
-      .then((data) => {
-        if (data.data === null || data.data === undefined) {
-          throw new Error(data.detail);
-        }
-        setComments([
-          ...comments,
-          ...(Array.isArray(data.data)
-            ? data.data
-            : data.data
-              ? [data.data]
-              : []),
-        ]);
-
-        setCommentContent("");
-        toast.success(t("animeDialog.commentAdded"));
+    try {
+      const response = await axios.post(`${API_URL}/comment`, body, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
+      if (response.data.data === null || response.data.data === undefined) {
+        throw new Error(response.data.detail);
+      }
+      setComments([
+        ...comments,
+        ...(Array.isArray(response.data.data)
+          ? response.data.data
+          : response.data.data
+          ? [response.data.data]
+          : []),
+      ]);
+      setCommentContent("");
+      toast.success(t("animeDialog.commentAdded"));
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      toast.error(error.message);
+    }
   };
 
   const deleteComment = async (commentId) => {
-    fetchWithAuth(`/comment/${commentId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw response;
-      })
-      .then((data) => {
+    try {
+      const response = await axios.delete(`${API_URL}/comment/${commentId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (response.status === 200) {
         setComments(comments.filter((comment) => comment.id !== commentId));
         toast.success(t("animeDialog.commentDeleted"));
-      })
-      .catch((error) => {
-        toast.error(error.message);
-        console.error("Error fetching data:", error);
-      });
+      } else {
+        throw new Error(response.data.detail);
+      }
+    } catch (error) {
+      toast.error(error.message);
+      console.error("Error deleting comment:", error);
+    }
   };
 
   const fetchAnimeComments = async (skip) => {
-    fetchWithAuth(`/comment?anime_id=${animeInfo.id}&skip=${skip}&limit=10`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw response;
-      })
-      .then((data) => {
-        if (data.data.length < 10) {
-          console.log("No more comments");
-          setHasNext(false);
-        }
-        setComments([
-          ...comments,
-          ...(Array.isArray(data.data)
-            ? data.data
-            : data.data
-              ? [data.data]
-              : []),
-        ]);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
+    try {
+      const response = await axios.get(`${API_URL}/comment`, {
+        params: {
+          anime_id: animeInfo.id,
+          skip: skip,
+          limit: 10,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
+      if (response.data.data.length < 10) {
+        setHasNext(false);
+      }
+      setComments([
+        ...comments,
+        ...(Array.isArray(response.data.data)
+          ? response.data.data
+          : response.data.data
+          ? [response.data.data]
+          : []),
+      ]);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
   };
 
   useEffect(() => {

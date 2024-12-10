@@ -1,9 +1,8 @@
 // src/authService.js
-
-let API_URL = "http://localhost:8000";
+import axios from "axios";
+import { API_URL } from "./config";
 
 const authService = {
-
 
   getToken: () => localStorage.getItem("token"),
 
@@ -11,42 +10,19 @@ const authService = {
 
   removeToken: () => localStorage.removeItem("token"),
 
-  fetchWithAuth: async (url, options = {}) => {
-    const token = authService.getToken();
-
-    if (!token) {
-      throw new Error(403);
-    }
-
-    const isValid = await authService.isAuthenticated();
-    if (!isValid) {
-      throw new Error(403);
-    }
-
-    const headers = {
-      ...options.headers,
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    };
-    return fetch(API_URL + url, { ...options, headers });
-  },
-
   isAuthenticated: async () => {
     const token = authService.getToken();
     if (!token) return false;
 
     try {
-      const response = await fetch(`${API_URL}/user/verify`, {
-        method: "GET",
-        headers: authService.getAuthHeaders(),
-        cache: "no-store",
+      const response = await axios.get(`${API_URL}/user/verify`, {
+      headers: authService.getAuthHeaders(),
       });
 
-      if (!response.ok) {
-        authService.removeToken();
-        const { detail } = await response.json();
-        console.error("Verification failed:", detail.msg || "Unknown error");
-        return false;
+      if (response.status !== 200) {
+      authService.removeToken();
+      console.error("Verification failed:", response.data.detail?.msg || "Unknown error");
+      return false;
       }
 
       return true;
@@ -58,16 +34,14 @@ const authService = {
 
   login: async (username, password) => {
     try {
-      const response = await fetch(`${API_URL}/user/signin`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-        cache: "no-store",
+      const response = await axios.post(`${API_URL}/user/signin`, {
+      username,
+      password,
       });
 
-      const data = await response.json();
-      if (!response.ok || !data.data?.token) {
-        throw new Error(data.detail?.msg || data.message || "Login failed");
+      const data = response.data;
+      if (!response.status === 200 || !data.data?.token) {
+      throw new Error(data.detail?.msg || data.message || "Login failed");
       }
 
       authService.setToken(data.data.token);
@@ -76,21 +50,19 @@ const authService = {
       console.error("Login error:", error);
       throw error;
     }
-  },
+    },
 
   getProfile: async () => {
     try {
-      const response = await fetch(`${API_URL}/user/me`, {
-        method: "GET",
-        headers: authService.getAuthHeaders(),
-        cache: "no-store",
+      const response = await axios.get(`${API_URL}/user/me`, {
+      headers: authService.getAuthHeaders(),
       });
 
-      const data = await response.json();
-      if (!response.ok || !data.data) {
-        throw new Error(
-          data.detail?.[0]?.msg || data.message || "Profile fetch failed"
-        );
+      const data = response.data;
+      if (!response.status === 200 || !data.data) {
+      throw new Error(
+        data.detail?.[0]?.msg || data.message || "Profile fetch failed"
+      );
       }
 
       return data.data;
@@ -102,15 +74,14 @@ const authService = {
 
   register: async (username, email, password) => {
     try {
-      const response = await fetch(`${API_URL}/user/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
-        cache: "no-store",
+      const response = await axios.post(`${API_URL}/user/signup`, {
+        username,
+        email,
+        password,
       });
 
-      const data = await response.json();
-      if (!response.ok || !data.data?.token) {
+      const data = response.data;
+      if (!response.status === 200 || !data.data?.token) {
         throw new Error(
           data.detail?.[0]?.msg || data.message || "Registration failed"
         );

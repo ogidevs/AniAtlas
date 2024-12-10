@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import AnimeDialog from "../components/AnimeDialog";
 import Header from "../components/Header";
 import { useAuth } from "../AuthContext";
+import axios from "axios";
 
 const AnimeDetail = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -14,11 +15,8 @@ const AnimeDetail = () => {
   useEffect(() => {
     const fetchAnime = async () => {
       try {
-        const response = await fetch(`https://api.jikan.moe/v4/anime/${id}/full`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch anime details");
-        }
-        const data = await response.json();
+        const response = await axios.get(`https://api.jikan.moe/v4/anime/${id}/full`);
+        const data = response.data;
 
         setAnimeInfo({
           id: data.data.mal_id,

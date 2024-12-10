@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import Header from "../components/Header";
+import { API_URL } from "../config";
 
 const Admin = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { user, fetchWithAuth } = useAuth();
+    const { user } = useAuth();
     const [userData, setUserData] = useState(null);
     const [commentData, setCommentData] = useState(null);
     
@@ -22,16 +24,14 @@ const Admin = () => {
 
     const fetchAllUsers = async () => {
         try {
-            const response = await fetchWithAuth('/user/all', {
-                method: "GET",
+            const response = await axios.get(`${API_URL}/user/all`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
             });
-            if (response.ok) {
-                const data = await response.json();
-                setUserData(data.data);
+            if (response.status === 200) {
+                setUserData(response.data.data);
                 toast.success(t("admin.fetchUsersSuccess"));
             } else {
                 throw response;
@@ -44,14 +44,13 @@ const Admin = () => {
 
     const disableUser = async (id) => {
         try {
-            const response = await fetchWithAuth(`/user/${id}/disable`, {
-                method: "PUT",
+            const response = await axios.put(`${API_URL}/user/${id}/disable`, {}, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
             });
-            if (response.ok) {
+            if (response.status === 200) {
                 fetchAllUsers();
                 toast.success(t("admin.disableUserSuccess"));
             } else {
@@ -65,14 +64,13 @@ const Admin = () => {
 
     const enableUser = async (id) => {
         try {
-            const response = await fetchWithAuth(`/user/${id}/enable`, {
-                method: "PUT",
+            const response = await axios.put(`${API_URL}/user/${id}/enable`, {}, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
             });
-            if (response.ok) {
+            if (response.status === 200) {
                 fetchAllUsers();
                 toast.success(t("admin.enableUserSuccess"));
             } else {
@@ -86,16 +84,14 @@ const Admin = () => {
 
     const fetchUserComments = async (id) => {
         try {
-            const response = await fetchWithAuth(`/comment/${id}`, {
-                method: "GET",
+            const response = await axios.get(`${API_URL}/comment/${id}`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
             });
-            if (response.ok) {
-                const data = await response.json();
-                setCommentData(data.data);
+            if (response.status === 200) {
+                setCommentData(response.data.data);
                 toast.success(t("admin.fetchCommentsSuccess"));
             } else {
                 throw response;
@@ -108,14 +104,13 @@ const Admin = () => {
 
     const deleteUserComment = async (id) => {
         try {
-            const response = await fetchWithAuth(`/comment/${id}`, {
-                method: "DELETE",
+            const response = await axios.delete(`${API_URL}/comment/${id}`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
             });
-            if (response.ok) {
+            if (response.status === 200) {
                 fetchUserComments(user.id);
                 toast.success(t("admin.deleteCommentSuccess"));
             } else {
