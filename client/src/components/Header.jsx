@@ -7,7 +7,9 @@ import { CiLogout } from 'react-icons/ci';
 const Header = ({ logout, isAuthenticated }) => {
     return (
         <div className="flex justify-between space-x-4 my-2">
-            <ThemeToggle />
+            <div className="flex flex-start flex-wrap text-center justify-center items-center">
+                <ThemeToggle />
+            </div>
             <ProfileHeader />
             <div className="flex flex-end flex-wrap text-center justify-center items-center">
                 <LanguageToggle />

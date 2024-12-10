@@ -50,7 +50,7 @@ const authService = {
       console.error("Login error:", error);
       throw error;
     }
-    },
+  },
 
   getProfile: async () => {
     try {
