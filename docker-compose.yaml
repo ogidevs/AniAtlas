@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: .
+      context: ./backend
       dockerfile: ./Dockerfile
     ports:
       - "8000:8000"
@@ -11,6 +11,14 @@ services:
       - ALGORITHM=HS256
     depends_on:
       - mongo
+  frontend:
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - app
 
   mongo:
     image: mongo:latest
